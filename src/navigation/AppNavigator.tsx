@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 // Import screens
 import { HomeScreen, RoutineBuilderScreen, RoutineScreen, SettingsScreen } from '../screens';
@@ -10,6 +11,26 @@ import { NavigationProps } from '../types';
 
 // Import theme
 import { screenOptions } from './navigationTheme';
+import { COLORS, FONTS } from '../constants';
+
+// Settings Header Button Component
+function SettingsHeaderButton() {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate('Settings' as never);
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      style={styles.headerButton}
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+    >
+      <Text style={styles.headerButtonText}>⚙️</Text>
+    </TouchableOpacity>
+  );
+}
 
 const Stack = createNativeStackNavigator<NavigationProps>();
 
@@ -18,7 +39,10 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={screenOptions}
+        screenOptions={{
+          ...screenOptions,
+          headerRight: () => <SettingsHeaderButton />,
+        }}
       >
         <Stack.Screen
           name="Home"
@@ -46,9 +70,21 @@ export default function AppNavigator() {
           component={SettingsScreen}
           options={{
             title: 'Settings',
+            headerRight: undefined,
           }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginRight: 15,
+    padding: 8,
+  },
+  headerButtonText: {
+    fontSize: 20,
+    color: COLORS.text.inverse,
+  },
+});
