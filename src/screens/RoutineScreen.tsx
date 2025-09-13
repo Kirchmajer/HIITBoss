@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationProps } from '../types';
 import { ScreenWrapper, Title, Body, Description, Button } from '../components';
@@ -30,17 +30,8 @@ export default function RoutineScreen({ navigation, route }: Props) {
   });
 
   const handleCancel = () => {
-    Alert.alert(
-      'Cancel Workout',
-      'Are you sure you want to cancel this workout?',
-      [
-        { text: 'No', style: 'cancel' },
-        { text: 'Yes', onPress: () => {
-          cancel();
-          navigation.navigate('Home');
-        }},
-      ]
-    );
+    cancel();
+    navigation.navigate('Home');
   };
 
   const handleDone = () => {

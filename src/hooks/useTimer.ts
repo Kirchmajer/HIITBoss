@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Routine, TimerState } from '../types';
 
 interface UseTimerReturn extends TimerState {
@@ -20,6 +20,8 @@ export function useTimer(routine: Routine, onComplete?: () => void): UseTimerRet
     totalTime: 0,
   });
 
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Calculate total time on mount
   useEffect(() => {
     let total = 0;
@@ -34,10 +36,8 @@ export function useTimer(routine: Routine, onComplete?: () => void): UseTimerRet
 
   // Timer interval
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-
     if (timerState.isRunning && !timerState.isPaused) {
-      interval = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setTimerState(prev => {
           if (prev.timeRemaining > 0) {
             return { ...prev, timeRemaining: prev.timeRemaining - 1 };
@@ -47,10 +47,18 @@ export function useTimer(routine: Routine, onComplete?: () => void): UseTimerRet
           }
         });
       }, 1000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     }
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [timerState.isRunning, timerState.isPaused]);
 
@@ -116,6 +124,10 @@ export function useTimer(routine: Routine, onComplete?: () => void): UseTimerRet
   }, []);
 
   const cancel = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     setTimerState(prev => ({
       ...prev,
       isRunning: false,
