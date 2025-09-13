@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationProps, Routine } from '../types';
-import { ScreenWrapper, Title, Subtitle, Description, Body } from '../components';
+import { ScreenWrapper, Title, Subtitle, Description, Body, Button, Card, EmptyState } from '../components';
 import { DataService } from '../services';
 import { PRESET_ROUTINES, initializePresetsIfNeeded } from '../constants/presets';
 import { formatDuration } from '../utils/timeUtils';
@@ -13,9 +14,11 @@ export default function HomeScreen({ navigation }: Props) {
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadRoutines();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadRoutines();
+    }, [])
+  );
 
   const loadRoutines = async () => {
     try {
@@ -50,7 +53,7 @@ export default function HomeScreen({ navigation }: Props) {
     }, 0);
 
     return (
-      <View style={styles.routineItem}>
+      <Card style={styles.routineItem}>
         <View style={styles.routineInfo}>
           <Body style={styles.routineName}>{item.name}</Body>
           <Description>
@@ -58,20 +61,20 @@ export default function HomeScreen({ navigation }: Props) {
           </Description>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.editButton]}
+          <Button
+            title="Edit"
             onPress={() => handleEdit(item)}
-          >
-            <Body style={styles.buttonText}>Edit</Body>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.runButton]}
+            variant="warning"
+            style={styles.editButton}
+          />
+          <Button
+            title="Run"
             onPress={() => handleRun(item)}
-          >
-            <Body style={styles.buttonText}>Run</Body>
-          </TouchableOpacity>
+            variant="success"
+            style={styles.runButton}
+          />
         </View>
-      </View>
+      </Card>
     );
   };
 
@@ -87,14 +90,17 @@ export default function HomeScreen({ navigation }: Props) {
   return (
     <ScreenWrapper>
       <Title>HIIT Boss</Title>
-      <TouchableOpacity style={styles.createButton} onPress={handleCreateNew}>
-        <Body style={styles.createButtonText}>Create New Routine</Body>
-      </TouchableOpacity>
+      <Button
+        title="Create New Routine"
+        onPress={handleCreateNew}
+        variant="primary"
+        style={styles.createButton}
+      />
       {routines.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Subtitle>No routines found</Subtitle>
-          <Description>Create your first routine to get started!</Description>
-        </View>
+        <EmptyState
+          title="No routines found"
+          description="Create your first routine to get started!"
+        />
       ) : (
         <FlatList
           data={routines}
@@ -109,33 +115,16 @@ export default function HomeScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   createButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
     marginBottom: 20,
-    alignItems: 'center',
-  },
-  createButtonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   listContainer: {
     paddingBottom: 20,
   },
   routineItem: {
-    backgroundColor: '#F5F5F5',
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
   },
   routineInfo: {
     flex: 1,
@@ -148,22 +137,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-    minWidth: 60,
-    alignItems: 'center',
-  },
   editButton: {
-    backgroundColor: '#FF9500',
+    minWidth: 60,
   },
   runButton: {
-    backgroundColor: '#34C759',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
+    minWidth: 60,
   },
 });

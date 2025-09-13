@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationProps } from '../types';
-import { ScreenWrapper, Title, Body, Description } from '../components';
+import { ScreenWrapper, Title, Body, Description, Button } from '../components';
 import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../constants';
 import { useTimer } from '../hooks/useTimer';
 import { formatTimeMMSS } from '../utils/timeUtils';
@@ -70,9 +70,12 @@ export default function RoutineScreen({ navigation, route }: Props) {
       <ScreenWrapper>
         <Title level={2}>Workout Complete!</Title>
         <Body style={styles.completedText}>Great job! You've finished {routine.name}</Body>
-        <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
-          <Body style={styles.doneButtonText}>Done</Body>
-        </TouchableOpacity>
+        <Button
+          title="Done"
+          onPress={handleDone}
+          variant="primary"
+          style={styles.doneButton}
+        />
       </ScreenWrapper>
     );
   }
@@ -92,23 +95,35 @@ export default function RoutineScreen({ navigation, route }: Props) {
       </View>
       <View style={styles.controlsContainer}>
         {!isRunning ? (
-          <TouchableOpacity style={styles.startButton} onPress={start}>
-            <Body style={styles.buttonText}>Start Workout</Body>
-          </TouchableOpacity>
+          <Button
+            title="Start Workout"
+            onPress={start}
+            variant="success"
+            style={styles.startButton}
+          />
         ) : (
           <>
             {isPaused ? (
-              <TouchableOpacity style={styles.resumeButton} onPress={resume}>
-                <Body style={styles.buttonText}>Resume</Body>
-              </TouchableOpacity>
+              <Button
+                title="Resume"
+                onPress={resume}
+                variant="success"
+                style={styles.resumeButton}
+              />
             ) : (
-              <TouchableOpacity style={styles.pauseButton} onPress={pause}>
-                <Body style={styles.buttonText}>Pause</Body>
-              </TouchableOpacity>
+              <Button
+                title="Pause"
+                onPress={pause}
+                variant="warning"
+                style={styles.pauseButton}
+              />
             )}
-            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-              <Body style={styles.cancelButtonText}>Cancel</Body>
-            </TouchableOpacity>
+            <Button
+              title="Cancel"
+              onPress={handleCancel}
+              variant="danger"
+              style={styles.cancelButton}
+            />
           </>
         )}
       </View>
@@ -140,53 +155,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   startButton: {
-    backgroundColor: COLORS.success,
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
   },
   pauseButton: {
-    backgroundColor: COLORS.warning,
+    marginBottom: SPACING.md,
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
-    marginBottom: SPACING.md,
   },
   resumeButton: {
-    backgroundColor: COLORS.success,
+    marginBottom: SPACING.md,
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
-    marginBottom: SPACING.md,
   },
   cancelButton: {
-    backgroundColor: COLORS.danger,
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
-    borderRadius: BORDER_RADIUS.sm,
-  },
-  buttonText: {
-    color: COLORS.text.inverse,
-    fontSize: FONTS.sizes.lg,
-    fontWeight: FONTS.weights.semibold,
-  },
-  cancelButtonText: {
-    color: COLORS.text.inverse,
-    fontSize: FONTS.sizes.md,
   },
   completedText: {
     textAlign: 'center',
     marginBottom: SPACING.xxl,
   },
   doneButton: {
-    backgroundColor: COLORS.primary,
     paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
-  },
-  doneButtonText: {
-    color: COLORS.text.inverse,
-    fontSize: FONTS.sizes.lg,
-    fontWeight: FONTS.weights.semibold,
   },
 });
