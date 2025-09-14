@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationProps, Routine } from '../types';
@@ -55,24 +55,24 @@ export default function HomeScreen({ navigation }: Props) {
 
     return (
       <Card style={styles.routineItem}>
-        <View style={styles.routineInfo}>
-          <Body style={styles.routineName}>{item.name}</Body>
-          <Description>
-            {totalRounds} rounds • {totalSets} sets • {formatDuration(totalDuration)}
-          </Description>
-        </View>
+        <TouchableOpacity
+          style={styles.routineTouchable}
+          onPress={() => handleRun(item)}
+          activeOpacity={0.7}
+        >
+          <View style={styles.routineInfo}>
+            <Body style={styles.routineName}>{item.name}</Body>
+            <Description>
+              {totalRounds} rounds • {totalSets} sets • {formatDuration(totalDuration)}
+            </Description>
+          </View>
+        </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <Button
             title="Edit"
             onPress={() => handleEdit(item)}
             variant="warning"
             style={styles.editButton}
-          />
-          <Button
-            title="Run"
-            onPress={() => handleRun(item)}
-            variant="success"
-            style={styles.runButton}
           />
         </View>
       </Card>
@@ -127,6 +127,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  routineTouchable: {
+    flex: 1,
+    paddingRight: 8,
+  },
   routineInfo: {
     flex: 1,
   },
@@ -139,9 +143,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   editButton: {
-    minWidth: 60,
-  },
-  runButton: {
     minWidth: 60,
   },
 });

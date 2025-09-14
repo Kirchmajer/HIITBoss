@@ -35,9 +35,11 @@ This document provides a comprehensive testing checklist for the HIIT Boss appli
 - [ ] Routine list scrolls properly with many routines
 
 ### Routine Actions
-- [ ] "Run" button navigates to Routine screen with correct routine
-- [ ] "Edit" button navigates to Routine Builder with routine loaded
+- [ ] Tapping routine card navigates to Routine screen with correct routine
+- [ ] Edit button navigates to Routine Builder with routine loaded
 - [ ] "Create New Routine" navigates to empty Routine Builder
+- [ ] Edit button doesn't trigger card tap when pressed
+- [ ] Card shows visual feedback (opacity change) when tapped
 
 ## 🏗️ Routine Builder Screen
 
