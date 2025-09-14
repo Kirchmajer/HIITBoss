@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ViewStyle, Dimensions } from 'react-native';
-import { COLORS, SPACING, BORDER_RADIUS } from '../constants/theme';
+import { COLORS, SPACING, BORDER_RADIUS, FONTS } from '../constants/theme';
 import { Body } from './Typography';
 
 interface SliderProps {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   value: {
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semibold,
   },
   sliderContainer: {
     // Container for slider

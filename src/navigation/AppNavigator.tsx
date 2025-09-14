@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   headerButtonText: {
-    fontSize: 20,
+    fontSize: FONTS.sizes.xl,
     color: COLORS.text.inverse,
   },
 });

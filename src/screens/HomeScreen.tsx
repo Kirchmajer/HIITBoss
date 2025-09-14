@@ -7,6 +7,7 @@ import { ScreenWrapper, Title, Subtitle, Description, Body, Button, Card, EmptyS
 import { DataService } from '../services';
 import { PRESET_ROUTINES, initializePresetsIfNeeded } from '../constants/presets';
 import { formatDuration } from '../utils/timeUtils';
+import { FONTS } from '../constants';
 
 type Props = NativeStackScreenProps<NavigationProps, 'Home'>;
 
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   routineName: {
-    fontWeight: 'bold',
+    fontWeight: FONTS.weights.bold,
     marginBottom: 4,
   },
   buttonContainer: {
