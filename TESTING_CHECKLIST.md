@@ -71,7 +71,11 @@ This document provides a comprehensive testing checklist for the HIIT Boss appli
 - [ ] Screen shows "Edit Routine" title when editing
 - [ ] Existing routine data loads correctly
 - [ ] All modifications save properly
-- [ ] "Save Routine" updates existing routine
+- [ ] "Save Changes" button updates existing routine
+- [ ] "Save as New" button creates duplicate with modifications
+- [ ] New routine has "(Copy)" suffix in name
+- [ ] Original routine remains unchanged when saving as new
+- [ ] Both buttons validate routine data before saving
 
 ## ⏱️ Routine Screen (Timer)
 

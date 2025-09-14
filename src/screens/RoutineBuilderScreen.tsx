@@ -103,21 +103,26 @@ export default function RoutineBuilderScreen({ navigation, route }: Props) {
     }));
   };
 
-  const saveRoutine = async () => {
+  const validateRoutine = () => {
     if (!routine.name.trim()) {
       Alert.alert('Error', 'Please enter a routine name');
-      return;
+      return false;
     }
     if (routine.rounds.length === 0) {
       Alert.alert('Error', 'Please add at least one round');
-      return;
+      return false;
     }
     for (let i = 0; i < routine.rounds.length; i++) {
       if (routine.rounds[i].sets.length === 0) {
         Alert.alert('Error', `Round ${i + 1} has no sets`);
-        return;
+        return false;
       }
     }
+    return true;
+  };
+
+  const saveRoutine = async () => {
+    if (!validateRoutine()) return;
 
     const success = await DataService.saveRoutine(routine);
     if (success) {
@@ -125,6 +130,25 @@ export default function RoutineBuilderScreen({ navigation, route }: Props) {
       navigation.goBack();
     } else {
       Alert.alert('Error', 'Failed to save routine');
+    }
+  };
+
+  const saveAsNewRoutine = async () => {
+    if (!validateRoutine()) return;
+
+    // Create a new routine with a new ID
+    const newRoutine: Routine = {
+      ...routine,
+      id: DataService.generateId(),
+      name: routine.name.trim() + ' (Copy)', // Add " (Copy)" to distinguish
+    };
+
+    const success = await DataService.saveRoutine(newRoutine);
+    if (success) {
+      Alert.alert('Success', 'New routine created successfully');
+      navigation.goBack();
+    } else {
+      Alert.alert('Error', 'Failed to create new routine');
     }
   };
 
@@ -206,12 +230,29 @@ export default function RoutineBuilderScreen({ navigation, route }: Props) {
           style={styles.addButton}
         />
 
-        <Button
-          title="Save Routine"
-          onPress={saveRoutine}
-          variant="primary"
-          style={styles.saveButton}
-        />
+        {isEditing ? (
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Save Changes"
+              onPress={saveRoutine}
+              variant="primary"
+              style={styles.saveButton}
+            />
+            <Button
+              title="Save as New"
+              onPress={saveAsNewRoutine}
+              variant="secondary"
+              style={styles.saveAsNewButton}
+            />
+          </View>
+        ) : (
+          <Button
+            title="Save Routine"
+            onPress={saveRoutine}
+            variant="primary"
+            style={styles.saveButton}
+          />
+        )}
       </ScrollView>
     </ScreenWrapper>
   );
@@ -246,5 +287,12 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginTop: SPACING.lg,
+  },
+  buttonContainer: {
+    marginTop: SPACING.lg,
+    gap: SPACING.md,
+  },
+  saveAsNewButton: {
+    // Additional styling for the save as new button if needed
   },
 });
