@@ -43,10 +43,27 @@ export default function RoutineBuilderScreen({ navigation, route }: Props) {
   };
 
   const addRound = () => {
-    setRoutine(prev => ({
-      ...prev,
-      rounds: [...prev.rounds, { sets: [], restDuration: 60 }],
-    }));
+    setRoutine(prev => {
+      // Find the last round to use as reference
+      const lastRound = prev.rounds[prev.rounds.length - 1];
+      const lastSet = lastRound?.sets[lastRound.sets.length - 1];
+
+      // Use values from last set if available, otherwise use defaults
+      const defaultSetValues = lastSet
+        ? { activeDuration: lastSet.activeDuration, restDuration: lastSet.restDuration }
+        : { activeDuration: 30, restDuration: 15 };
+
+      // Use rest duration from last round if available, otherwise use default
+      const defaultRoundRest = lastRound?.restDuration ?? 60;
+
+      return {
+        ...prev,
+        rounds: [...prev.rounds, {
+          sets: [defaultSetValues], // Start new round with one set using smart defaults
+          restDuration: defaultRoundRest
+        }],
+      };
+    });
   };
 
   const removeRound = (roundIndex: number) => {
@@ -68,11 +85,21 @@ export default function RoutineBuilderScreen({ navigation, route }: Props) {
   const addSet = (roundIndex: number) => {
     setRoutine(prev => ({
       ...prev,
-      rounds: prev.rounds.map((round, i) =>
-        i === roundIndex
-          ? { ...round, sets: [...round.sets, { activeDuration: 30, restDuration: 15 }] }
-          : round
-      ),
+      rounds: prev.rounds.map((round, i) => {
+        if (i === roundIndex) {
+          // Use values from the last set if it exists, otherwise use defaults
+          const lastSet = round.sets[round.sets.length - 1];
+          const defaultValues = lastSet
+            ? { activeDuration: lastSet.activeDuration, restDuration: lastSet.restDuration }
+            : { activeDuration: 30, restDuration: 15 };
+
+          return {
+            ...round,
+            sets: [...round.sets, defaultValues]
+          };
+        }
+        return round;
+      }),
     }));
   };
 

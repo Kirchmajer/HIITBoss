@@ -55,11 +55,16 @@ This document provides a comprehensive testing checklist for the HIIT Boss appli
 - [ ] Set inputs for active duration and rest duration work
 - [ ] "Remove Set" button removes individual sets
 - [ ] Multiple sets can be added to each round
+- [ ] New sets autofill with previous set's values
+- [ ] First set in round uses default values (30s active, 15s rest)
 
 ### Round Management
 - [ ] "Remove Round" button removes entire rounds
 - [ ] Multiple rounds can be created
 - [ ] Round rest duration inputs work correctly
+- [ ] New rounds start with one set using previous round's last set values
+- [ ] New rounds autofill rest duration from previous round
+- [ ] First round uses default values (30s active, 15s rest, 60s round rest)
 
 ### Save Functionality
 - [ ] "Save Routine" button validates required fields
